@@ -1,0 +1,229 @@
+<!doctype html>
+<html>
+  <head>
+    <title>PTIT AntiPhishing Tool</title>
+    <link rel="stylesheet" href="./style/style.css"/>
+    <link rel="stylesheet" href="./style/bootstrap.min.css"/>
+    <link rel="stylesheet" href="./style/animate.min.css"/>
+    <link rel="stylesheet" href="./flag-icon-css-master/css/flag-icon.min.css"/>
+    <link rel="stylesheet" href="./style/bs-select-css/bootstrap-select.min.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+ 
+    <script src="./js/jquery-3.5.1.min.js"></script>
+    <script src="./js/popper.min.js"></script>
+    <script src="./js/bootstrap.min.js"></script>
+    <script src="./js/progressbar.min.js"></script>
+    <script src="./js/bs-select-js/bootstrap-select.min.js"></script>
+    <script src="./js/language.js"></script>
+    <script src="popup.js"></script>
+
+    <style>
+    .popup-container {
+      width: 500px;
+      background-color: transparent;
+      overflow: hidden;
+      user-select: none;
+      outline: none;
+      border: none;
+    }
+
+    /* Toggle switch */
+    .switch {
+      position: relative;
+      display: inline-block;
+      width: 48px;
+      height: 24px;
+    }
+
+    .switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      inset: 0;
+      background-color: #ccc;
+      transition: .3s;
+      border-radius: 34px;
+    }
+
+    .slider:before {
+      position: absolute;
+      content: "";
+      height: 18px;
+      width: 18px;
+      left: 3px;
+      bottom: 3px;
+      background-color: white;
+      transition: .3s;
+      border-radius: 50%;
+    }
+
+    /* When checked */
+    input:checked + .slider {
+      background-color: #349c2f; /* màu xanh bạn thích chỉnh được */
+    }
+
+    input:checked + .slider:before {
+      transform: translateX(24px);
+    }
+
+    /* Rounded slider */
+    .slider.round {
+      border-radius: 34px;
+    }
+
+    .slider.round:before {
+      border-radius: 50%;
+    }
+
+    
+    /* Hero header for popup */
+    .hero{
+      position: relative;
+      width: 100%;
+      height: 200px; /* chỉnh nếu muốn cao hơn */
+      background-image: url('./img/header_img3.jpg');
+      background-size: cover;
+      background-position: center;
+      overflow: hidden;
+      margin-bottom: 30px;
+    }
+
+    /* color overlay để chữ nổi */
+    .hero-overlay{
+      position: absolute;
+      inset: 0;
+      background: rgba(6, 55, 96, 0.65); /* tone xanh rêu giống ảnh mẫu, sửa alpha nếu cần */
+    }
+
+    /* nội dung lên trên overlay */
+    .hero-content{
+      position: relative;
+      z-index: 2;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      text-align: center;
+      padding-bottom: 20px;
+    }
+
+    /* logo nhỏ bên trong header */
+    .hero-logo{
+      width: 90px;
+      height: auto;
+      box-shadow: rgba(0,0,0,0.25);
+      background: rgba(255,255,255,0.02);
+      padding-bottom: 5px;
+    }
+
+    /* tiêu đề / slogan */
+    .hero-title{
+      padding-top: 3px;
+      font-size: 14px;
+      font-weight: 300;
+      line-height: 1;
+    }
+
+    /* nhấn mạnh 1 từ */
+    .hero-title strong{ font-weight: 500; }
+
+    /* responsive nhỏ */
+    @media (max-width: 420px){
+      .hero{ height: 110px; }
+      .hero-logo{ width: 70px; }
+      .hero-title{ font-size: 13px; }
+    }
+    </style>
+
+  </head>
+
+  <body>
+    <div class="popup-container">
+      <div class="row mx-0">
+        <div class="col-12 p-0">
+          <div class="hero">
+            <div class="hero-overlay"></div>
+            <div class="hero-content">
+              <!-- vẫn dùng logo hiện tại, sẽ hiển thị trên header -->
+              <img class="hero-logo" src="./img/logo2.png" alt="logo"/>
+
+              <h2 style="font-size: 20px;"><strong>PTIT AntiPhishing Tool</strong></h2>
+
+              <h2 class="hero-title">Making the world's information <strong>safely</strong> accessible.</h2>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-12 text-center">
+          <button id="checkPage" class="btn btn-success" style="width: 130px; height: 50px;"><strong>Scan this site</strong></button>
+        </div>
+
+        <div class="col-12 text-center my-4 d-flex align-items-center justify-content-center">
+          <label class="switch">
+            <input type="checkbox" id="autoScanToggle">
+            <span class="slider round"></span>
+          </label>
+
+          <label for="autoScanToggle" style="font-size: 14px; margin-left: 10px;">
+            Enable Auto Scan (Google Search)
+          </label>
+        </div>
+      </div>
+
+      <div class="row mx-2 my-2" id="prediction"></div>
+
+      <div id="errorSection" style="display: none;">
+          <div class="row mx-2 my-4">
+            <div class="col-8 offset-2 font-weight-bold" id="errorMessage">
+            </div>
+          </div>
+      </div>
+
+      <div id="detailsSection" style="display: none;">
+        <div class="row mx-2 my-4" >
+          <div class="col-8 offset-2 font-weight-bold text-center" >
+            The probability of this website being a phishing website is: 
+          </div>
+        </div>
+
+        <div class="row mx-2 my-4" >
+          <div class="col-6 offset-3" id="progressBarContainer"></div>
+        </div>
+
+        <div class="row mx-2 my-4" >
+          <div class="col-8 offset-2 font-weight-bold text-center" >
+            We based our prediction on these features 
+          </div>
+        </div>
+
+        <div class="row justify-content-around mx-1 my-2" id="features"></div>
+      </div>
+      
+      <footer style="width: 100%; background-color: #e0e8f4; padding: 8px 8px">
+        <div class="d-flex justify-content-between align-items-center" style="width:100%; height: 15px">
+
+          <!-- Left logo -->
+          <div class="d-flex align-items-center" style="padding-left: 10px;">
+            <img src="./img/logoptit.webp" style="width:14px; height:auto;">
+            <span class="text-muted" style="font-size: 9px; padding-left: 10px">Copyright &copy; 2025 AntiPhishing Tool, TTM Team</span>
+          </div>
+
+          <!-- GitHub icon (SVG, không cần file) -->
+          <a href="https://github.com/YourGithubHere" target="_blank" class="d-flex align-items-center" style="color:white; padding-right:10px">
+            <i class="bi bi-github" style="font-size: 18px; color: rgb(14, 39, 98);"></i>
+          </a>
+        </div>
+      </footer>
+
+    </div>
+
+    <script src="./js/language.js"></script>
+  </body>
+</html>

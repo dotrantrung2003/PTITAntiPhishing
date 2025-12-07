@@ -1,0 +1,37 @@
+{
+    "manifest_version": 3,
+  
+    "name": "PTIT AntiPhishing Tool",
+    "description": "This extension will analyze a page and predict if it is a phishing site or not , by using machine learning!",
+    "version": "1.0.1",
+  
+    "action": {
+     "default_popup": "popup.html",
+     "default_icon": "icon.png"
+    },
+
+    "icons": { "16": "icon.png",
+        "48": "icon48.png",
+       "128": "icon128.png"
+    },
+    
+    "host_permissions": [
+        "http://localhost:3000/*",
+        "https://www.google.com/*"
+    ],
+
+    "permissions": [
+        "activeTab",
+        "scripting",
+        "storage"
+     ],
+
+    "content_scripts": [
+    {
+        "matches": ["https://www.google.com/search*"],
+        "js": ["autoscanner.js"],
+        "run_at": "document_idle"
+    }
+  ]
+     
+}

@@ -1,0 +1,24 @@
+/*
+safe=#28A745
+danger=#DC3545
+warning=#FFC107
+
+*/
+.safe {
+    background-color: #28A745;
+    color:white;
+}
+
+.danger {
+    background-color: #DC3545;
+    color:white;
+}
+
+.warning {
+    background-color: #FFC107;
+    color:white;  
+}
+
+.buttonLoader{
+    background: url('/img/loader5svg.svg') no-repeat 50% 50%;
+}
