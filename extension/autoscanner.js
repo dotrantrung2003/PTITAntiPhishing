@@ -15,9 +15,25 @@
 
   await new Promise(r => setTimeout(r, 1500));
 
-  const links = Array.from(document.querySelectorAll('a[href^="http"]:not([href*=\"google.com\"])'));
+  const translateTexts = [
+  "Dịch trang này",
+  "Translate this page",
+  "Traduire cette page",
+  "Diese Seite übersetzen",
+  "Traducir esta página",
+  "Traduzir esta página",
+  "Traduci questa pagina",
+  "Перевести эту страницу",
+  "このページを翻訳",
+  "이 페이지 번역",
+  "翻译此页面"
+];
+
+  const links = Array.from(document.querySelectorAll('a[href^="http"]:not([href*="google"])')).filter(a => !translateTexts.includes(a.innerText.trim()));
+
 
   const scanLink = async (link) => {
+
     const url = link.href;
     try {
       const res = await fetch("http://localhost:3000/detectphishing", {
@@ -47,6 +63,7 @@
       link.style.outlineOffset = "2px";
       link.title = "Scan failed";
     }
+    
   };
 
   async function scanInBatches(items, batchSize = 10) {
